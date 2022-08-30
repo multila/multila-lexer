@@ -136,6 +136,60 @@ export class Lexer {
     return res;
   }
 
+  /**
+   * lower case
+   * @returns
+   */
+  isLID(): boolean {
+    return (
+      this.token.type === LexerTokenType.ID &&
+      this.token.token === this.token.token.toLowerCase()
+    );
+  }
+
+  /**
+   * lower case
+   * @returns
+   */
+  LID(): string {
+    let res = '';
+    if (
+      this.token.type === LexerTokenType.ID &&
+      this.token.token === this.token.token.toLowerCase()
+    ) {
+      res = this.token.token;
+      this.next();
+    } else throw new ParseError(this.err_pos() + 'expected lower case ID');
+    return res;
+  }
+
+  /**
+   * upper case
+   * @returns
+   */
+  isUID(): boolean {
+    return (
+      this.token.type === LexerTokenType.ID &&
+      this.token.token === this.token.token.toUpperCase()
+    );
+  }
+
+  /**
+   * upper case
+   * @returns
+   */
+  UID(): string {
+    let res = '';
+    if (
+      this.token.type === LexerTokenType.ID &&
+      this.token.token === this.token.token.toUpperCase()
+    ) {
+      res = this.token.token;
+      this.next();
+    } else throw new ParseError(this.err_pos() + 'expected upper case ID');
+    return res;
+  }
+
   isINT(): boolean {
     return this.token.type === LexerTokenType.INT;
   }
