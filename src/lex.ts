@@ -11,6 +11,7 @@
 
 */
 
+import { getStr, Language, LanguageText } from './lang';
 import { LexerState } from './state';
 import { LexerToken, LexerTokenType } from './token';
 
@@ -109,30 +110,36 @@ export class Lexer {
     //
   }
 
-  isEND(): boolean {
+  public isEND(): boolean {
     return this.token.type === LexerTokenType.END;
   }
 
-  isNotEND(): boolean {
+  public isNotEND(): boolean {
     return this.token.type !== LexerTokenType.END;
   }
 
-  END(): void {
+  public END(): void {
     if (this.token.type === LexerTokenType.END) {
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected END');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' END',
+      );
   }
 
-  isID(): boolean {
+  public isID(): boolean {
     return this.token.type === LexerTokenType.ID;
   }
 
-  ID(): string {
+  public ID(): string {
     let res = '';
     if (this.token.type === LexerTokenType.ID) {
       res = this.token.token;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected ID');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' ID',
+      );
     return res;
   }
 
@@ -140,7 +147,7 @@ export class Lexer {
    * lower case
    * @returns
    */
-  isLID(): boolean {
+  public isLID(): boolean {
     return (
       this.token.type === LexerTokenType.ID &&
       this.token.token === this.token.token.toLowerCase()
@@ -151,7 +158,7 @@ export class Lexer {
    * lower case
    * @returns
    */
-  LID(): string {
+  public LID(): string {
     let res = '';
     if (
       this.token.type === LexerTokenType.ID &&
@@ -159,7 +166,10 @@ export class Lexer {
     ) {
       res = this.token.token;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected lower case ID');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' LowerCaseID',
+      );
     return res;
   }
 
@@ -167,7 +177,7 @@ export class Lexer {
    * upper case
    * @returns
    */
-  isUID(): boolean {
+  public isUID(): boolean {
     return (
       this.token.type === LexerTokenType.ID &&
       this.token.token === this.token.token.toUpperCase()
@@ -178,7 +188,7 @@ export class Lexer {
    * upper case
    * @returns
    */
-  UID(): string {
+  public UID(): string {
     let res = '';
     if (
       this.token.type === LexerTokenType.ID &&
@@ -186,151 +196,229 @@ export class Lexer {
     ) {
       res = this.token.token;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected upper case ID');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' UpperCaseID',
+      );
     return res;
   }
 
-  isINT(): boolean {
+  public isINT(): boolean {
     return this.token.type === LexerTokenType.INT;
   }
 
-  INT(): number {
+  public INT(): number {
     let res = 0;
     if (this.token.type === LexerTokenType.INT) {
       res = this.token.value;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected INT');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' INT',
+      );
     return res;
   }
 
-  isBIGINT(): boolean {
+  public isBIGINT(): boolean {
     return this.token.type === LexerTokenType.BIGINT;
   }
 
-  BIGINT(): bigint {
+  public BIGINT(): bigint {
     let res = 0n;
     if (this.token.type === LexerTokenType.BIGINT) {
       res = this.token.valueBigint;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected BIGINT');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' BIGINT',
+      );
     return res;
   }
 
-  isREAL(): boolean {
+  public isREAL(): boolean {
     return this.token.type === LexerTokenType.REAL;
   }
 
-  REAL(): number {
+  public REAL(): number {
     let res = 0.0;
     if (this.token.type === LexerTokenType.REAL) {
       res = this.token.value;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected REAL');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' REAL',
+      );
     return res;
   }
 
-  isHEX(): boolean {
+  public isHEX(): boolean {
     return this.token.type === LexerTokenType.HEX;
   }
 
-  HEX(): string {
+  public HEX(): string {
     let res = '';
     if (this.token.type === LexerTokenType.HEX) {
       res = this.token.token;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected HEX');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' HEX',
+      );
     return res;
   }
 
-  isSTR(): boolean {
+  public isSTR(): boolean {
     return this.token.type === LexerTokenType.STR;
   }
 
-  STR(): string {
+  public STR(): string {
     let res = '';
     if (this.token.type === LexerTokenType.STR) {
       res = this.token.token;
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected STR');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' STR',
+      );
     return res;
   }
 
-  isTER(t: string): boolean {
+  public isTER(t: string): boolean {
     return (
       (this.token.type === LexerTokenType.DEL && this.token.token === t) ||
       (this.token.type === LexerTokenType.ID && this.token.token === t)
     );
   }
 
-  isNotTER(t: string): boolean {
+  public isNotTER(t: string): boolean {
     return this.isTER(t) == false && this.token.type != LexerTokenType.END;
   }
 
-  TER(t: string): void {
+  public TER(t: string): void {
     if (
       (this.token.type === LexerTokenType.DEL && this.token.token === t) ||
       (this.token.type === LexerTokenType.ID && this.token.token === t)
     ) {
       this.next();
-    } else throw new ParseError(this.err_pos() + "expected '" + t + "'");
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' "' + t + '"',
+      );
   }
 
-  isINDENT(): boolean {
+  // end of statement
+  public isEOS(): boolean {
+    // TODO: ';' OR newline
+    // TODO: configure ';'
+    return this.token.token === ';';
+  }
+
+  // end of statement
+  public EOS(): void {
+    // TODO: ';' OR newline
+    if (this.token.token === ';') this.next();
+    else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' ";"',
+      );
+  }
+
+  public isINDENT(): boolean {
     return this.token.type == LexerTokenType.DEL && this.token.token === '\t+';
   }
 
-  isNotINDENT(): boolean {
+  public isNotINDENT(): boolean {
     return !(
       this.token.type === LexerTokenType.DEL && this.token.token === '\t+'
     );
   }
 
-  INDENT(): void {
+  public INDENT(): void {
     if (this.token.type == LexerTokenType.DEL && this.token.token === '\t+') {
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected INDENT');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' INDENT',
+      );
   }
 
-  isOUTDENT(): boolean {
+  public isOUTDENT(): boolean {
     return this.token.type == LexerTokenType.DEL && this.token.token === '\t-';
   }
 
-  isNotOUTDENT(): boolean {
+  public isNotOUTDENT(): boolean {
     if (this.token.type === LexerTokenType.END) return false; // TODO: must do this for ALL "not" methods
     return !(
       this.token.type === LexerTokenType.DEL && this.token.token === '\t-'
     );
   }
 
-  OUTDENT(): void {
+  public OUTDENT(): void {
     if (this.token.type == LexerTokenType.DEL && this.token.token === '\t-') {
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected OUTDENT');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' OUTDENT',
+      );
   }
 
-  isNEWLINE(): boolean {
+  public isNEWLINE(): boolean {
     return (
       this.isOUTDENT() ||
       (this.token.type == LexerTokenType.DEL && this.token.token === '\n')
     );
   }
 
-  isNotNEWLINE(): boolean {
+  public isNotNEWLINE(): boolean {
     return (
       !this.isOUTDENT() &&
       !(this.token.type === LexerTokenType.DEL && this.token.token === '\n')
     );
   }
 
-  NEWLINE(): void {
+  public NEWLINE(): void {
     if (this.isOUTDENT()) return;
     if (this.token.type == LexerTokenType.DEL && this.token.token === '\n') {
       this.next();
-    } else throw new ParseError(this.err_pos() + 'expected NEWLINE');
+    } else
+      throw new ParseError(
+        this.err_pos() + getStr(LanguageText.EXPECTED) + ' NEWLINE',
+      );
   }
 
-  error(s: string, tk: LexerToken = null): void {
+  public error(s: string, tk: LexerToken = null): void {
     throw new ParseError(this.err_pos(tk) + s);
+  }
+
+  public errorExpected(terminals: string[]): void {
+    let s = getStr(LanguageText.EXPECTED_ONE_OF) + ' ';
+    for (let i = 0; i < terminals.length; i++) {
+      if (i > 0) s += ', ';
+      s += terminals[i];
+    }
+    s += '.';
+    this.error(s);
+  }
+
+  errorConditionNotBoolean(): void {
+    this.error(getStr(LanguageText.CONDITION_NOT_BOOLEAN));
+  }
+
+  errorUnknownSymbol(symId: string): void {
+    this.error(getStr(LanguageText.UNKNOWN_SYMBOL) + ' ' + symId);
+  }
+
+  errorNotAFunction(): void {
+    this.error(getStr(LanguageText.SYMBOL_IS_NOT_A_FUNCTION));
+  }
+
+  errorTypesInBinaryOperation(op: string, t1: string, t2: string): void {
+    this.error(
+      getStr(LanguageText.BIN_OP_INCOMPATIBLE_TYPES)
+        .replace('$OP', op)
+        .replace('$T1', t1)
+        .replace('$T2', t2),
+    );
   }
 
   private err_pos(tk: LexerToken = null): string {
@@ -338,7 +426,7 @@ export class Lexer {
     return tk.fileID + ':' + tk.row + ':' + tk.col + ': ';
   }
 
-  addPutTrailingSemicolon(type: LexerTokenType, terminal = ''): void {
+  public addPutTrailingSemicolon(type: LexerTokenType, terminal = ''): void {
     const tk = new LexerToken();
     tk.type = type;
     tk.token = terminal;
@@ -349,7 +437,7 @@ export class Lexer {
    * Sets a set of terminals consisting of identifiers and delimiters.
    * @param terminals
    */
-  setTerminals(terminals: string[]): void {
+  public setTerminals(terminals: string[]): void {
     this.terminals.clear();
     this.multicharDelimiters = [];
     for (const ter of terminals) {
@@ -368,31 +456,19 @@ export class Lexer {
     });
   }
 
-  getTerminals(): string[] {
+  public getTerminals(): string[] {
     return Array.from(this.terminals);
   }
 
-  getMulticharDelimiters(): string[] {
+  public getMulticharDelimiters(): string[] {
     return this.multicharDelimiters;
   }
 
-  getToken(): LexerToken {
+  public getToken(): LexerToken {
     return this.token;
   }
 
-  private isNext(str: string): boolean {
-    const src = this.fileStack.slice(-1)[0].sourceCode;
-    const s = this.state;
-    const n = str.length;
-    if (s.i + n >= s.n) return false;
-    for (let k = 0; k < n; k++) {
-      const ch = str[k];
-      if (src[s.i + k] != ch) return false;
-    }
-    return true;
-  }
-
-  next(): void {
+  public next(): void {
     this.lastToken = this.token;
     const src = this.fileStack.slice(-1)[0].sourceCode;
     const file_id = this.fileStack.slice(-1)[0].id;
@@ -768,7 +844,19 @@ export class Lexer {
     return this.emitNewline || insertedSemicolon;
   }
 
-  pushSource(id: string, src: string): void {
+  private isNext(str: string): boolean {
+    const src = this.fileStack.slice(-1)[0].sourceCode;
+    const s = this.state;
+    const n = str.length;
+    if (s.i + n >= s.n) return false;
+    for (let k = 0; k < n; k++) {
+      const ch = str[k];
+      if (src[s.i + k] != ch) return false;
+    }
+    return true;
+  }
+
+  public pushSource(id: string, src: string): void {
     if (this.fileStack.length > 0) {
       this.fileStack.slice(-1)[0].stateBackup = this.state.copy();
       this.fileStack.slice(-1)[0].tokenBackup = this.token.copy();
@@ -782,7 +870,7 @@ export class Lexer {
     this.next();
   }
 
-  popSource(): void {
+  public popSource(): void {
     this.fileStack.pop();
     if (this.fileStack.length > 0) {
       this.state = this.fileStack.slice(-1)[0].stateBackup;
@@ -790,14 +878,14 @@ export class Lexer {
     }
   }
 
-  backupState(): LexerBackup {
+  public backupState(): LexerBackup {
     return {
       state: this.state.copy(),
       token: this.token.copy(),
     };
   }
 
-  replayState(backup: LexerBackup): void {
+  public replayState(backup: LexerBackup): void {
     this.state = backup.state;
     this.token = backup.token;
   }
