@@ -8,8 +8,20 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/test/index.ts",
+      "program": "${workspaceFolder}/test/lex_TESTS.ts",
       "args": [""],
+      "sourceMaps": true,
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Current TS File",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${file}",
       "sourceMaps": true,
       "preLaunchTask": "tsc: build - tsconfig.json",
       "console": "integratedTerminal"
