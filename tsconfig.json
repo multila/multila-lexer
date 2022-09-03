@@ -3,14 +3,13 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "declaration": true,
-    //"forceConsistentCasingInFileNames": true,   // TODO: was false!!
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": false, // TODO: should be true
     "target": "ES2020",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "js-dist",
+    "outDir": "lib",
     "skipLibCheck": true,
     "downlevelIteration": true,
     "lib": ["DOM", "ES2020"]
