@@ -20,7 +20,8 @@ npm install multila-lexer
 
 ## Example
 
-The following example program writes an LL(1) parser by hand and uses `multila-lexer` to fetch tokens. It parses a simple language with the following grammar rules, denoted in EBNF:
+The following example program implements an LL(1) top-down parser for simple language with the following grammar, specified in EBNF.
+It uses `multila-lexer` to fetch tokens.
 
 ```
 program = { assignment };
@@ -37,7 +38,7 @@ A valid example program is for example:
 x := 3 * (4+5);
 ```
 
-Example code
+Example code, written in TypeScript:
 
 ```typescript
 // import multila-lexer
