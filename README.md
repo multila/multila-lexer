@@ -2,13 +2,15 @@
 
 Lexical Analyzer for the Web and Node.js written in TypeScript.
 
-## Copyright Info
+> Copyright 2022 by Andreas Schwenk
 
-2022 by Andreas Schwenk. Licensed by GPLv3.
+> Licensed by GPLv3
 
-- Multila Website: https://www.multila.org
-- Personal Website: https://www.arts-and-sciences.com
-- Mail: contact@compiler-construction.com
+> Multila Website: https://www.multila.org
+
+> Personal Website: https://www.arts-and-sciences.com
+
+> Mail: contact@compiler-construction.com
 
 ## Installation
 
