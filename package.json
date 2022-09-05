@@ -4,7 +4,7 @@
   "description": "Lexical Analyzer written in TypeScript",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && node ./build.js"
+    "build": "tsc --project tsconfig.build.json && node ./build.mjs"
   },
   "repository": {
     "type": "git",

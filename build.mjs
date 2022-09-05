@@ -7,7 +7,7 @@ PROJECT
 
 */
 
-const esbuild = require('esbuild');
+import * as esbuild from 'esbuild';
 
 esbuild.buildSync({
   platform: 'node',
