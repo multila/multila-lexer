@@ -15,7 +15,7 @@ Lexical Analyzer for the Web and Node.js written in TypeScript.
 ## Installation
 
 ```bash
-npm install multila-lexer
+npm install @multila/multila-lexer
 ```
 
 ## Example
