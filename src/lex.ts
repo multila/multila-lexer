@@ -1,17 +1,10 @@
 /*
-  PROJECT
-
-    MULTILA Compiler and Computer Architecture Infrastructure
-    Copyright (c) 2022 by Andreas Schwenk, contact@multila.org
-    Licensed by GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
-
-  SYNOPSIS
-
-    TODO
-
+  MULTILA Compiler and Computer Architecture Infrastructure
+  Copyright (c) 2022 by Andreas Schwenk, contact@multila.org
+  Licensed by GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 */
 
-import { getStr, Language, LanguageText } from './lang';
+import { getStr, LanguageText } from './lang';
 import { LexerState } from './state';
 import { LexerToken, LexerTokenType } from './token';
 
@@ -50,6 +43,7 @@ export class Lexer {
   private emitInt = true;
   private emitReal = true;
   private emitBigint = true;
+  private emitSingleQuotes = true;
   private emitDoubleQuotes = true;
   private emitIndentation = false;
   private lexerFilePositionPrefix = '!>';
@@ -92,6 +86,10 @@ export class Lexer {
 
   public enableEmitBigint(value: boolean): void {
     this.emitBigint = value;
+  }
+
+  public enableEmitSingleQuotes(value: boolean): void {
+    this.emitSingleQuotes = value;
   }
 
   public enableEmitDoubleQuotes(value: boolean): void {
@@ -683,10 +681,29 @@ export class Lexer {
         if (s.i < s.n && src[s.i] === '"') {
           s.i++;
           s.col++;
-          //if(this.tk.tk.length > 0) {
           this.state = s;
           return;
-          //}
+        }
+      }
+    }
+    // STR = '\'' { any except '\'' and '\n' } '\''
+    s = s_bak.copy();
+    if (this.emitSingleQuotes) {
+      this.token.type = LexerTokenType.STR;
+      if (s.i < s.n && src[s.i] === "'") {
+        this.token.token = '';
+        s.i++;
+        s.col++;
+        while (s.i < s.n && src[s.i] != "'" && src[s.i] != '\n') {
+          this.token.token += src[s.i];
+          s.i++;
+          s.col++;
+        }
+        if (s.i < s.n && src[s.i] === "'") {
+          s.i++;
+          s.col++;
+          this.state = s;
+          return;
         }
       }
     }
