@@ -20,5 +20,5 @@
       }
     ]
   },
-  "ignorePatterns": ["./build.js"]
+  "ignorePatterns": ["./build.js", "test/example.js"]
 }
