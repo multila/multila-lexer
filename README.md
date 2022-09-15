@@ -23,7 +23,7 @@ npm install @multila/multila-lexer
 The following example program implements an LL(1) top-down parser for simple language with the following grammar, specified in EBNF.
 It uses `multila-lexer` to fetch tokens.
 
-```
+```EBNF
 program = { assignment };
 assignment = ID ":=" add ";";
 add = mul { "+" mul };
@@ -38,15 +38,15 @@ A valid example program is for example:
 x := 3 * (4+5);
 ```
 
-Example code, written in TypeScript:
+Example code:
 
-```typescript
+```javascript
 // import multila-lexer
-import { Lexer } from 'multila-lexer/src/lex';
+const lex = require('@multila/multila-lexer');
 
-function parse(src: string): void {
+function parse(src) {
   // create a new lexer instance
-  const lexer = new Lexer();
+  const lexer = new lex.Lexer();
 
   // configuration
   lexer.configureSingleLineComments('#');
@@ -60,14 +60,14 @@ function parse(src: string): void {
 }
 
 //G program = { assignment };
-function parseProgram(lexer: Lexer): void {
+function parseProgram(lexer) {
   while (lexer.isNotEND()) {
     parseAssignment(lexer);
   }
 }
 
 //G assignment = ID ":=" add ";";
-function parseAssignment(lexer: Lexer): void {
+function parseAssignment(lexer) {
   const id = lexer.ID();
   console.log(id);
   lexer.TER(':=');
@@ -77,7 +77,7 @@ function parseAssignment(lexer: Lexer): void {
 }
 
 //G add = mul { "+" mul };
-function parseAdd(lexer: Lexer): void {
+function parseAdd(lexer) {
   parseMul(lexer);
   while (lexer.isTER('+')) {
     lexer.next();
@@ -87,7 +87,7 @@ function parseAdd(lexer: Lexer): void {
 }
 
 //G mul = unary { "*" unary };
-function parseMul(lexer: Lexer): void {
+function parseMul(lexer) {
   parseUnary(lexer);
   while (lexer.isTER('*')) {
     lexer.next();
@@ -97,7 +97,7 @@ function parseMul(lexer: Lexer): void {
 }
 
 //G unary = ID | INT | "(" add ")";
-function parseUnary(lexer: Lexer): void {
+function parseUnary(lexer) {
   if (lexer.isID()) {
     const id = lexer.ID();
     console.log(id);
@@ -124,26 +124,66 @@ parse(src);
 
 ## Methods
 
-PLEASE NOTE: THIS DOCUMENTATION WILL BE UPDATED SOON!
-
-Configuration
+> Configuration
 
 - `enableEmitNewlines(value: boolean)`
 
   Enables to emit newline (`\n`) tokens that can be tested by `lexer.isNEWLINE()` and consumed by `lexer.NEWLINE()`. Otherwise, newline characters are considered as white spaces.
 
 - `enableEmitHex(value: boolean)`
+
+  Enables to emit hexadecimal tokens that can be tested by `lexer.isHEX()` and consumed by `lexer.HEX()`.
+
 - `enableEmitInt(value: boolean)`
+
+  Enables to emit integer tokens that can be tested by `lexer.isINT()` and consumed by `lexer.INT()`.
+
 - `enableEmitReal(value: boolean)`
+
+  Enables to emit real valued tokens that can be tested by `lexer.isREAL()` and consumed by `lexer.REAL()`.
+
 - `enableEmitBigint(value: boolean)`
+
+  Enables to emit big integer tokens that can be tested by `lexer.isBIGINT()` and consumed by `lexer.BIGINT()`.
+
+- `enableEmitSingleQuotes(value: boolean)`
+
+  Enables to emit single quote tokens that can be tested by `lexer.isSTR()` and consumed by `lexer.STR()`.
+
 - `enableEmitDoubleQuotes(value: boolean)`
+
+  Enables to emit double quote tokens that can be tested by `lexer.isSTR()` and consumed by `lexer.STR()`.
+
 - `enableEmitIndentation(value: boolean)`
+
+  Enables to emit indentation tokens that can be tested by `lexer.isINDENT()` and consumed by `lexer.INDENT()`, as well as `lexer.isOUTDENT()` and consumed by `lexer.OUTDENT()`, respectively.
+
 - `enableBackslashLineBreaks(value: boolean)`
+
+  If enabled, a backslash (`\`) right before a newline concatenates the next line, ignoring indentation.
+
+> Input Files
+
+TODO
+
+> Parsing
+
+TODO
+
+> Error Handling
+
+TODO
 
 ## Tokens
 
-- `ID`
-- `INT`
-- `REAL`
-- `EOS`
-- `STR`
+- `ID` identifier
+- `INT` integer constant
+- `REAL` real valued constant
+- `EOS` end of statement (usually `;`)
+- `STR` string constant in double quotes (`"`) or single quotes (`'`)
+- `TER` terminal
+- `INDENT` indentation begin
+- `OUTDENT` indentation end
+- `NEWLINE` newline (`\n`)
+- `EOS` end of statement (`;` or `\n`)
+- `END`end of input
