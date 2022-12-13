@@ -1,6 +1,6 @@
 {
   "name": "@multila/multila-lexer",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "Lexical Analyzer written in TypeScript",
   "main": "lib/index.js",
   "scripts": {
