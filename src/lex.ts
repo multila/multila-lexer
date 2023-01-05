@@ -888,7 +888,7 @@ export class Lexer {
     return true;
   }
 
-  public pushSource(id: string, src: string): void {
+  public pushSource(id: string, src: string, initialRowIdx = 1): void {
     if (this.fileStack.length > 0) {
       this.fileStack.slice(-1)[0].stateBackup = this.state.copy();
       this.fileStack.slice(-1)[0].tokenBackup = this.token.copy();
@@ -898,12 +898,9 @@ export class Lexer {
     f.sourceCode = src;
     this.fileStack.push(f);
     this.state = new LexerState();
+    this.state.row = initialRowIdx;
     this.state.n = src.length;
     this.next();
-  }
-
-  public setTokenRow(rowIdx: number): void {
-    this.state.row = rowIdx;
   }
 
   public popSource(): void {
