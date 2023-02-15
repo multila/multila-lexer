@@ -1,17 +1,10 @@
 /*
-  PROJECT
-
-    MULTILA Compiler and Computer Architecture Infrastructure
-    Copyright (c) 2022 by Andreas Schwenk, contact@multila.org
-    Licensed by GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
-
-  SYNOPSIS
-
-    TODO
-
+  MULTILA Compiler and Computer Architecture Infrastructure
+  Copyright (c) 2022 by Andreas Schwenk, contact@multila.org
+  Licensed by GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 */
 
-import { getStr, Language, LanguageText } from './lang';
+import { getStr, LanguageText } from './lang';
 import { LexerState } from './state';
 import { LexerToken, LexerTokenType } from './token';
 
@@ -50,10 +43,14 @@ export class Lexer {
   private emitInt = true;
   private emitReal = true;
   private emitBigint = true;
+  private emitSingleQuotes = true;
   private emitDoubleQuotes = true;
   private emitIndentation = false;
   private lexerFilePositionPrefix = '!>';
   private allowBackslashLineBreaks = false;
+
+  private allowUmlautInID = false;
+  private allowHyphenInID = false;
 
   private putTrailingSemicolon: LexerToken[] = [];
   private multicharDelimiters: string[] = [];
@@ -94,6 +91,10 @@ export class Lexer {
     this.emitBigint = value;
   }
 
+  public enableEmitSingleQuotes(value: boolean): void {
+    this.emitSingleQuotes = value;
+  }
+
   public enableEmitDoubleQuotes(value: boolean): void {
     this.emitDoubleQuotes = value;
   }
@@ -104,6 +105,14 @@ export class Lexer {
 
   public enableBackslashLineBreaks(value: boolean): void {
     this.allowBackslashLineBreaks = value;
+  }
+
+  public enableUmlautInID(value: boolean): void {
+    this.allowUmlautInID = value;
+  }
+
+  public enableHyphenInID(value: boolean): void {
+    this.allowHyphenInID = value;
   }
 
   constructor() {
@@ -636,15 +645,17 @@ export class Lexer {
       this.token.type = LexerTokenType.END;
       return;
     }
-    // ID = ( "A".."Z" | "a".."z" | "_" )
-    //   { "A".."Z" | "a".."z" | "0".."9" | "_" };
+    // ID = ( "A".."Z" | "a".."z" | "_" | hyphen&&"-" | umlaut&&("ä".."ß") )
+    //   { "A".."Z" | "a".."z" | "0".."9" | "_" | hyphen&&"-" | umlaut&&("ä".."ß") };
     this.token.type = LexerTokenType.ID;
     this.token.token = '';
     if (
       s.i < s.n &&
       ((src[s.i] >= 'A' && src[s.i] <= 'Z') ||
         (src[s.i] >= 'a' && src[s.i] <= 'z') ||
-        src[s.i] === '_')
+        src[s.i] === '_' ||
+        (this.allowHyphenInID && src[s.i] == '-') ||
+        (this.allowUmlautInID && 'ÄÖÜäöüß'.includes(src[s.i])))
     ) {
       this.token.token += src[s.i];
       s.i++;
@@ -654,7 +665,9 @@ export class Lexer {
         ((src[s.i] >= 'A' && src[s.i] <= 'Z') ||
           (src[s.i] >= 'a' && src[s.i] <= 'z') ||
           (src[s.i] >= '0' && src[s.i] <= '9') ||
-          src[s.i] === '_')
+          src[s.i] === '_' ||
+          (this.allowHyphenInID && src[s.i] == '-') ||
+          (this.allowUmlautInID && 'ÄÖÜäöüß'.includes(src[s.i])))
       ) {
         this.token.token += src[s.i];
         s.i++;
@@ -683,10 +696,29 @@ export class Lexer {
         if (s.i < s.n && src[s.i] === '"') {
           s.i++;
           s.col++;
-          //if(this.tk.tk.length > 0) {
           this.state = s;
           return;
-          //}
+        }
+      }
+    }
+    // STR = '\'' { any except '\'' and '\n' } '\''
+    s = s_bak.copy();
+    if (this.emitSingleQuotes) {
+      this.token.type = LexerTokenType.STR;
+      if (s.i < s.n && src[s.i] === "'") {
+        this.token.token = '';
+        s.i++;
+        s.col++;
+        while (s.i < s.n && src[s.i] != "'" && src[s.i] != '\n') {
+          this.token.token += src[s.i];
+          s.i++;
+          s.col++;
+        }
+        if (s.i < s.n && src[s.i] === "'") {
+          s.i++;
+          s.col++;
+          this.state = s;
+          return;
         }
       }
     }
@@ -856,7 +888,7 @@ export class Lexer {
     return true;
   }
 
-  public pushSource(id: string, src: string): void {
+  public pushSource(id: string, src: string, initialRowIdx = 1): void {
     if (this.fileStack.length > 0) {
       this.fileStack.slice(-1)[0].stateBackup = this.state.copy();
       this.fileStack.slice(-1)[0].tokenBackup = this.token.copy();
@@ -866,6 +898,7 @@ export class Lexer {
     f.sourceCode = src;
     this.fileStack.push(f);
     this.state = new LexerState();
+    this.state.row = initialRowIdx;
     this.state.n = src.length;
     this.next();
   }

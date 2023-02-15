@@ -5,11 +5,11 @@
 */
 
 // import multila-lexer
-import { Lexer } from '../src/lex';
+const lex = require('@multila/multila-lexer');
 
-function parse(src: string): void {
+function parse(src) {
   // create a new lexer instance
-  const lexer = new Lexer();
+  const lexer = new lex.Lexer();
 
   // configuration
   lexer.configureSingleLineComments('#');
@@ -23,14 +23,14 @@ function parse(src: string): void {
 }
 
 //G program = { assignment };
-function parseProgram(lexer: Lexer): void {
+function parseProgram(lexer) {
   while (lexer.isNotEND()) {
     parseAssignment(lexer);
   }
 }
 
 //G assignment = ID ":=" add ";";
-function parseAssignment(lexer: Lexer): void {
+function parseAssignment(lexer) {
   const id = lexer.ID();
   console.log(id);
   lexer.TER(':=');
@@ -40,7 +40,7 @@ function parseAssignment(lexer: Lexer): void {
 }
 
 //G add = mul { "+" mul };
-function parseAdd(lexer: Lexer): void {
+function parseAdd(lexer) {
   parseMul(lexer);
   while (lexer.isTER('+')) {
     lexer.next();
@@ -50,7 +50,7 @@ function parseAdd(lexer: Lexer): void {
 }
 
 //G mul = unary { "*" unary };
-function parseMul(lexer: Lexer): void {
+function parseMul(lexer) {
   parseUnary(lexer);
   while (lexer.isTER('*')) {
     lexer.next();
@@ -60,7 +60,7 @@ function parseMul(lexer: Lexer): void {
 }
 
 //G unary = ID | INT | "(" add ")";
-function parseUnary(lexer: Lexer): void {
+function parseUnary(lexer) {
   if (lexer.isID()) {
     const id = lexer.ID();
     console.log(id);
