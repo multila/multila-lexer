@@ -26,7 +26,7 @@ class LexerBackup {
   LexerState state;
   LexerToken token;
 
-  LexerBackup(this.state,this.token);
+  LexerBackup(this.state, this.token);
 }
 
 class Lexer {
@@ -57,10 +57,7 @@ class Lexer {
     this._singleLineCommentStart = pattern;
   }
 
-  void configureMultiLineComments(
-    [startPattern = '/*',
-    endPattern = '*/']
-  ) {
+  void configureMultiLineComments([startPattern = '/*', endPattern = '*/']) {
     this._multiLineCommentStart = startPattern;
     this._multilineCommentEnd = endPattern;
   }
@@ -139,10 +136,8 @@ class Lexer {
    * @returns
    */
   bool isLID() {
-    return (
-      this._token.type == LexerTokenType.ID &&
-      this._token.token == this._token.token.toLowerCase()
-    );
+    return (this._token.type == LexerTokenType.ID &&
+        this._token.token == this._token.token.toLowerCase());
   }
 
   /**
@@ -151,10 +146,8 @@ class Lexer {
    */
   String LID() {
     var res = '';
-    if (
-      this._token.type == LexerTokenType.ID &&
-      this._token.token == this._token.token.toLowerCase()
-    ) {
+    if (this._token.type == LexerTokenType.ID &&
+        this._token.token == this._token.token.toLowerCase()) {
       res = this._token.token;
       this.next();
     } else
@@ -169,10 +162,8 @@ class Lexer {
    * @returns
    */
   bool isUID() {
-    return (
-      this._token.type == LexerTokenType.ID &&
-      this._token.token == this._token.token.toUpperCase()
-    );
+    return (this._token.type == LexerTokenType.ID &&
+        this._token.token == this._token.token.toUpperCase());
   }
 
   /**
@@ -181,10 +172,8 @@ class Lexer {
    */
   String UID() {
     var res = '';
-    if (
-      this._token.type == LexerTokenType.ID &&
-      this._token.token == this._token.token.toUpperCase()
-    ) {
+    if (this._token.type == LexerTokenType.ID &&
+        this._token.token == this._token.token.toUpperCase()) {
       res = this._token.token;
       this.next();
     } else
@@ -199,9 +188,9 @@ class Lexer {
   }
 
   int INT() {
-    var res = 0;
+    int res = 0;
     if (this._token.type == LexerTokenType.INT) {
-      res = this._token.value;
+      res = this._token.value as int;
       this.next();
     } else
       throw new Exception(
@@ -275,10 +264,9 @@ class Lexer {
   }
 
   bool isTER(String t) {
-    return (
-      (this._token.type == LexerTokenType.DEL && this._token.token == t) ||
-      (this._token.type == LexerTokenType.ID && this._token.token == t)
-    );
+    return ((this._token.type == LexerTokenType.DEL &&
+            this._token.token == t) ||
+        (this._token.type == LexerTokenType.ID && this._token.token == t));
   }
 
   bool isNotTER(String t) {
@@ -286,10 +274,8 @@ class Lexer {
   }
 
   TER(String t) {
-    if (
-      (this._token.type == LexerTokenType.DEL && this._token.token == t) ||
-      (this._token.type == LexerTokenType.ID && this._token.token == t)
-    ) {
+    if ((this._token.type == LexerTokenType.DEL && this._token.token == t) ||
+        (this._token.type == LexerTokenType.ID && this._token.token == t)) {
       this.next();
     } else
       throw new Exception(
@@ -307,7 +293,8 @@ class Lexer {
   // end of statement
   EOS() {
     // TODO: ';' OR newline
-    if (this._token.token == ';') this.next();
+    if (this._token.token == ';')
+      this.next();
     else
       throw new Exception(
         this._err_pos() + getStr(LanguageText.EXPECTED) + ' ";"',
@@ -319,9 +306,8 @@ class Lexer {
   }
 
   bool isNotINDENT() {
-    return !(
-      this._token.type == LexerTokenType.DEL && this._token.token == '\t+'
-    );
+    return !(this._token.type == LexerTokenType.DEL &&
+        this._token.token == '\t+');
   }
 
   INDENT() {
@@ -338,10 +324,10 @@ class Lexer {
   }
 
   bool isNotOUTDENT() {
-    if (this._token.type == LexerTokenType.END) return false; // TODO: must do this for ALL "not" methods
-    return !(
-      this._token.type == LexerTokenType.DEL && this._token.token == '\t-'
-    );
+    if (this._token.type == LexerTokenType.END)
+      return false; // TODO: must do this for ALL "not" methods
+    return !(this._token.type == LexerTokenType.DEL &&
+        this._token.token == '\t-');
   }
 
   OUTDENT() {
@@ -354,17 +340,13 @@ class Lexer {
   }
 
   bool isNEWLINE() {
-    return (
-      this.isOUTDENT() ||
-      (this._token.type == LexerTokenType.DEL && this._token.token == '\n')
-    );
+    return (this.isOUTDENT() ||
+        (this._token.type == LexerTokenType.DEL && this._token.token == '\n'));
   }
 
   bool isNotNEWLINE() {
-    return (
-      !this.isOUTDENT() &&
-      !(this._token.type == LexerTokenType.DEL && this._token.token == '\n')
-    );
+    return (!this.isOUTDENT() &&
+        !(this._token.type == LexerTokenType.DEL && this._token.token == '\n'));
   }
 
   NEWLINE() {
@@ -406,9 +388,9 @@ class Lexer {
   errorTypesInBinaryOperation(String op, String t1, String t2) {
     this.error(
       getStr(LanguageText.BIN_OP_INCOMPATIBLE_TYPES)
-        .replaceAll('\$OP', op)
-        .replaceAll('\$T1', t1)
-        .replaceAll('\$T2', t2),
+          .replaceAll('\$OP', op)
+          .replaceAll('\$T1', t1)
+          .replaceAll('\$T2', t2),
     );
   }
 
@@ -433,18 +415,17 @@ class Lexer {
     this._multicharDelimiters = [];
     for (var ter in terminals) {
       if (ter.length == 0) continue;
-      if (
-        (ter.codeUnitAt(0) >= 'A'.codeUnitAt(0) && ter.codeUnitAt(0) <= 'Z'.codeUnitAt(0)) ||
-        (ter.codeUnitAt(0) >= 'a'.codeUnitAt(0) && ter.codeUnitAt(0) <= 'z'.codeUnitAt(0)) ||
-        ter[0] == '_'
-      )
+      if ((ter.codeUnitAt(0) >= 'A'.codeUnitAt(0) &&
+              ter.codeUnitAt(0) <= 'Z'.codeUnitAt(0)) ||
+          (ter.codeUnitAt(0) >= 'a'.codeUnitAt(0) &&
+              ter.codeUnitAt(0) <= 'z'.codeUnitAt(0)) ||
+          ter[0] == '_')
         this._terminals.add(ter);
-      else this._multicharDelimiters.add(ter);
+      else
+        this._multicharDelimiters.add(ter);
     }
-    // must sort delimiters by ascending length (e.g. "==" must NOT be tokenized to "=", "=")
-    this._multicharDelimiters.sort(function (a, b) {
-      return b.length - a.length;
-    });
+    // must sort delimiters by descending length (e.g. "==" must NOT be tokenized to "=", "=")
+    this._multicharDelimiters.sort((a, b) => b.length - a.length);
   }
 
   List<String> getTerminals() {
@@ -493,27 +474,26 @@ class Lexer {
         if (s.indent >= 0) s.indent += 4;
       }
       // backslash line break -> consume all following whitespace
-      else if (
-        this._allowBackslashLineBreaks &&
-        s.i < s.n &&
-        src[s.i] == '\\'
-      ) {
+      else if (this._allowBackslashLineBreaks &&
+          s.i < s.n &&
+          src[s.i] == '\\') {
         s.i++;
         while (s.i < s.n) {
-          if (src[s.i] == ' ') s.col++;
-          else if (src[s.i] == '\t') s.col += 4;
+          if (src[s.i] == ' ')
+            s.col++;
+          else if (src[s.i] == '\t')
+            s.col += 4;
           else if (src[s.i] == '\n') {
             s.row++;
             s.col = 1;
-          } else break;
+          } else
+            break;
           s.i++;
         }
       }
       // single line comment (slc)
-      else if (
-        this._singleLineCommentStart.length > 0 &&
-        this._isNext(this._singleLineCommentStart)
-      ) {
+      else if (this._singleLineCommentStart.length > 0 &&
+          this._isNext(this._singleLineCommentStart)) {
         if (this._emitIndentation && s.indent >= 0) break;
         var n = this._singleLineCommentStart.length;
         s.i += n;
@@ -529,10 +509,8 @@ class Lexer {
         s.indent = 0;
       }
       // multi line comment (mlc)
-      else if (
-        this._multiLineCommentStart.length > 0 &&
-        this._isNext(this._multiLineCommentStart)
-      ) {
+      else if (this._multiLineCommentStart.length > 0 &&
+          this._isNext(this._multiLineCommentStart)) {
         if (this._emitIndentation && s.indent >= 0) break;
         var n = this._multiLineCommentStart.length;
         s.i += n;
@@ -543,7 +521,8 @@ class Lexer {
             s.row++;
             s.col = 1;
             s.indent = 0;
-          } else s.col++;
+          } else
+            s.col++;
           s.i++;
         }
         n = this._multilineCommentEnd.length;
@@ -551,10 +530,8 @@ class Lexer {
         s.col += n;
       }
       // FILEPOS = PREFIX ":" STR ":" INT ":" "INT";
-      else if (
-        this._lexerFilePositionPrefix.length > 0 &&
-        src.substring(s.i).startsWith(this._lexerFilePositionPrefix)
-      ) {
+      else if (this._lexerFilePositionPrefix.length > 0 &&
+          src.substring(s.i).startsWith(this._lexerFilePositionPrefix)) {
         s.i += this._lexerFilePositionPrefix.length;
         // path
         var path = '';
@@ -581,7 +558,8 @@ class Lexer {
         }
         s.i++;
         this._token.col = int.parse(colStr);
-      } else break;
+      } else
+        break;
     }
     // indentation
     if (this._emitIndentation && s.indent >= 0) {
@@ -595,8 +573,10 @@ class Lexer {
             this._token = new LexerToken();
             this._token.fileID = file_id;
             this._token.row = s.row;
-            if (is_plus) this._token.col = s.col - diff + 4 * k;
-            else this._token.col = s.col;
+            if (is_plus)
+              this._token.col = s.col - diff + 4 * k;
+            else
+              this._token.col = s.col;
             this._token.type = LexerTokenType.DEL;
             this._token.token = is_plus ? '\t+' : '\t-';
             s.stack.add(this._token);
@@ -631,29 +611,30 @@ class Lexer {
     //   { "A".."Z" | "a".."z" | "0".."9" | "_" };
     this._token.type = LexerTokenType.ID;
     this._token.token = '';
-    if (
-      s.i < s.n &&
-      ((src[s.i] >= 'A' && src[s.i] <= 'Z') ||
-        (src[s.i] >= 'a' && src[s.i] <= 'z') ||
-        src[s.i] == '_')
-    ) {
+    if (s.i < s.n &&
+        ((src.codeUnitAt(s.i) >= 'A'.codeUnitAt(0) &&
+                src.codeUnitAt(s.i) <= 'Z'.codeUnitAt(0)) ||
+            (src.codeUnitAt(s.i) >= 'a'.codeUnitAt(0) &&
+                src.codeUnitAt(s.i) <= 'z'.codeUnitAt(0)) ||
+            src.codeUnitAt(s.i) == '_'.codeUnitAt(0))) {
       this._token.token += src[s.i];
       s.i++;
       s.col++;
-      while (
-        s.i < s.n &&
-        ((src[s.i] >= 'A' && src[s.i] <= 'Z') ||
-          (src[s.i] >= 'a' && src[s.i] <= 'z') ||
-          (src[s.i] >= '0' && src[s.i] <= '9') ||
-          src[s.i] == '_')
-      ) {
+      while (s.i < s.n &&
+          ((src.codeUnitAt(s.i) >= 'A'.codeUnitAt(0) &&
+                  src.codeUnitAt(s.i) <= 'Z'.codeUnitAt(0)) ||
+              (src.codeUnitAt(s.i) >= 'a'.codeUnitAt(0) &&
+                  src.codeUnitAt(s.i) <= 'z'.codeUnitAt(0)) ||
+              (src.codeUnitAt(s.i) >= '0'.codeUnitAt(0) &&
+                  src.codeUnitAt(s.i) <= '9'.codeUnitAt(0)) ||
+              src[s.i] == '_')) {
         this._token.token += src[s.i];
         s.i++;
         s.col++;
       }
     }
     if (this._token.token.length > 0) {
-      if (this._terminals.has(this._token.token))
+      if (this._terminals.contains(this._token.token))
         this._token.type = LexerTokenType.TER;
       this._state = s;
       return;
@@ -693,21 +674,22 @@ class Lexer {
           s.i++;
           s.col++;
           var k = 0;
-          while (
-            s.i < s.n &&
-            ((src[s.i] >= '0' && src[s.i] <= '9') ||
-              (src[s.i] >= 'A' && src[s.i] <= 'F') ||
-              (src[s.i] >= 'a' && src[s.i] <= 'f'))
-          ) {
+          while (s.i < s.n &&
+              ((src.codeUnitAt(s.i) >= '0'.codeUnitAt(0) &&
+                      src.codeUnitAt(s.i) <= '9'.codeUnitAt(0)) ||
+                  (src.codeUnitAt(s.i) >= 'A'.codeUnitAt(0) &&
+                      src.codeUnitAt(s.i) <= 'F'.codeUnitAt(0)) ||
+                  (src.codeUnitAt(s.i) >= 'a'.codeUnitAt(0) &&
+                      src.codeUnitAt(s.i) <= 'f'.codeUnitAt(0)))) {
             this._token.token += src[s.i];
             s.i++;
             s.col++;
             k++;
           }
           if (k > 0) {
+            this._token.value = int.parse(this._token.token, radix: 16);
             this._token.token = '0x' + this._token.token;
-            this._token.value = parseInt(this._token.token, 16);
-            this._token.valueBigint = BigInt(this._token.token);
+            this._token.valueBigint = BigInt.parse(this._token.token);
             this._state = s;
             return;
           }
@@ -723,36 +705,38 @@ class Lexer {
         this._token.token = '0';
         s.i++;
         s.col++;
-      } else if (s.i < s.n && src[s.i] >= '1' && src[s.i] <= '9') {
+      } else if (s.i < s.n &&
+          src.codeUnitAt(s.i) >= '1'.codeUnitAt(0) &&
+          src.codeUnitAt(s.i) <= '9'.codeUnitAt(0)) {
         this._token.token = src[s.i];
         s.i++;
         s.col++;
-        while (s.i < s.n && src[s.i] >= '0' && src[s.i] <= '9') {
+        while (s.i < s.n &&
+            src.codeUnitAt(s.i) >= '0'.codeUnitAt(0) &&
+            src.codeUnitAt(s.i) <= '9'.codeUnitAt(0)) {
           this._token.token += src[s.i];
           s.i++;
           s.col++;
         }
       }
-      if (
-        this._token.token.length > 0 &&
-        this._emitBigint &&
-        s.i < s.n &&
-        src[s.i] == 'n'
-      ) {
+      if (this._token.token.length > 0 &&
+          this._emitBigint &&
+          s.i < s.n &&
+          src[s.i] == 'n') {
         s.i++;
         s.col++;
         this._token.type = LexerTokenType.BIGINT;
-      } else if (
-        this._token.token.length > 0 &&
-        this._emitReal &&
-        s.i < s.n &&
-        src[s.i] == '.'
-      ) {
+      } else if (this._token.token.length > 0 &&
+          this._emitReal &&
+          s.i < s.n &&
+          src[s.i] == '.') {
         this._token.type = LexerTokenType.REAL;
         this._token.token += '.';
         s.i++;
         s.col++;
-        while (s.i < s.n && src[s.i] >= '0' && src[s.i] <= '9') {
+        while (s.i < s.n &&
+            src.codeUnitAt(s.i) >= '0'.codeUnitAt(0) &&
+            src.codeUnitAt(s.i) <= '9'.codeUnitAt(0)) {
           this._token.token += src[s.i];
           s.i++;
           s.col++;
@@ -762,8 +746,9 @@ class Lexer {
         if (this._token.type == LexerTokenType.INT)
           this._token.value = int.parse(this._token.token);
         else if (this._token.type == LexerTokenType.BIGINT)
-          this._token.valueBigint = BigInt(this._token.token);
-        else this._token.value = num.parse(this._token.token);
+          this._token.valueBigint = BigInt.parse(this._token.token);
+        else
+          this._token.value = num.parse(this._token.token);
         this._state = s;
         return;
       }
@@ -812,11 +797,13 @@ class Lexer {
       this._token.type = LexerTokenType.DEL;
     } else if (this._putTrailingSemicolon.length > 0) {
       var match = false;
-      for (var pts of this._putTrailingSemicolon) {
-        if (pts.type == this._lastToken.type) {
+      for (var i = 0; i < this._putTrailingSemicolon.length; i++) {
+        var pts = this._putTrailingSemicolon[i];
+        if (pts.type == this._lastToken?.type) {
           if (pts.type == LexerTokenType.DEL)
-            match = pts.token == this._lastToken.token;
-          else match = true;
+            match = pts.token == this._lastToken?.token;
+          else
+            match = true;
           if (match) break;
         }
       }
@@ -864,13 +851,13 @@ class Lexer {
   popSource() {
     this._fileStack.removeLast();
     if (this._fileStack.length > 0) {
-      this._state = this._fileStack.last.stateBackup;
-      this._token = this._fileStack.last.tokenBackup;
+      this._state = this._fileStack.last.stateBackup as LexerState;
+      this._token = this._fileStack.last.tokenBackup as LexerToken;
     }
   }
 
   LexerBackup backupState() {
-    return new LexerBackup(this._state.copy(),this._token.copy());
+    return new LexerBackup(this._state.copy(), this._token.copy());
   }
 
   void replayState(LexerBackup backup) {
