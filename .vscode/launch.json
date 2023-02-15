@@ -2,9 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "dart",
+      "request": "launch",
+      "name": "DART: Run Tests",
+      "program": "${workspaceFolder}/test/lex_TESTS.dart",
+      "args": [""],
+      "console": "terminal"
+    },
+    {
       "type": "node",
       "request": "launch",
-      "name": "Run Tests",
+      "name": "NODE: Run Tests",
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
       "skipFiles": ["<node_internals>/**"],
