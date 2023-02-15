@@ -7,8 +7,6 @@ PROJECT
 
 */
 
-import 'dart:html';
-
 import '../src/lex.dart';
 import '../src/token.dart';
 
@@ -34,16 +32,18 @@ void run_internal(Lexer lexer, String id, String src) {
   }
 }
 
-LexerToken createToken(Map<String,dynamic> map) {
+LexerToken createToken(Map<String, dynamic> map) {
   var tk = new LexerToken();
   tk.token = map['token'];
-  tk.type = map['type'];
+  tk.type = LexerTokenType.values.byName(map['type']);
   tk.value = map['value'];
-  tk.valueBigint = map['valueBigint'];
+  if (map.containsKey('valueBigint')) {
+    tk.valueBigint = map['valueBigint'];
+  }
   tk.fileID = map['fileID'];
   tk.row = map['row'];
   tk.col = map['col'];
-    return tk;
+  return tk;
 }
 
 void run() {
@@ -75,15 +75,14 @@ sub:
   run_internal(lexer, 'prog0.txt', prog);
 
   var xxx = {
-      "token": 'def',
-      "type": 'TER',
-      "value": 0,
-      "valueBigint": 0,
-      "fileID": 'prog0.txt',
-      "row": 1,
-      "col": 1,
-    };
-
+    "token": 'def',
+    "type": 'TER',
+    "value": 0,
+    "valueBigint": 0,
+    "fileID": 'prog0.txt',
+    "row": 1,
+    "col": 1,
+  };
 
   var expected = [
     createToken({
@@ -884,12 +883,17 @@ sub:
 
   assert(result.length == expected.length);
   for (var i = 0; i < result.length; i++) {
-    assert.deepStrictEqual(
-      //JSON.parse(JSON.stringify(result[i])),
-      result[i],
-      expected[i],
-    );
+    print("token $i");
+    var ok = result[i].compare(expected[i]);
+    if (!ok) {
+      print('=== UNEQUAL ===');
+      print(result[i]);
+      print(expected[i]);
+    }
+    assert(ok);
   }
 }
 
-run();
+void main() {
+  run();
+}
