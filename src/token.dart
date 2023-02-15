@@ -18,14 +18,15 @@ class LexerToken {
   int row = 0;
   int col = 0;
 
-  @override
-  String toString() {
-    var tk = this.token;
-    tk = tk.replaceAll('\n', '\\n');
-    tk = tk.replaceAll('\t', '\\t');
-    var s = this.fileID + ':' + this.row.toString() + ':' + this.col.toString();
-    s += ': "' + tk + '" (' + this.type.name + ')';
-    return s;
+  bool compare(LexerToken tk) {
+    if (this.token != tk.token) return false;
+    if (this.type != tk.type) return false;
+    if (this.value != tk.value) return false;
+    if (this.valueBigint != tk.valueBigint) return false;
+    if (this.fileID != tk.fileID) return false;
+    if (this.row != tk.row) return false;
+    if (this.col != tk.row) return false;
+    return true;
   }
 
   LexerToken copy() {
@@ -37,5 +38,15 @@ class LexerToken {
     bak.row = this.row;
     bak.col = this.col;
     return bak;
+  }
+
+  @override
+  String toString() {
+    var tk = this.token;
+    tk = tk.replaceAll('\n', '\\n');
+    tk = tk.replaceAll('\t', '\\t');
+    var s = this.fileID + ':' + this.row.toString() + ':' + this.col.toString();
+    s += ': "' + tk + '" (' + this.type.name + ')';
+    return s;
   }
 }
