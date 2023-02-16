@@ -883,12 +883,13 @@ sub:
 
   assert(result.length == expected.length);
   for (var i = 0; i < result.length; i++) {
-    print("token $i");
     var ok = result[i].compare(expected[i]);
     if (!ok) {
       print('=== UNEQUAL ===');
-      print(result[i]);
-      print(expected[i]);
+      var r = result[i];
+      var e = expected[i];
+      print(r);
+      print(e);
     }
     assert(ok);
   }
