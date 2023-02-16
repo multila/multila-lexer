@@ -25,7 +25,7 @@ class LexerToken {
     if (this.valueBigint != tk.valueBigint) return false;
     if (this.fileID != tk.fileID) return false;
     if (this.row != tk.row) return false;
-    if (this.col != tk.row) return false;
+    if (this.col != tk.col) return false;
     return true;
   }
 
