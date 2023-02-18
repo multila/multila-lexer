@@ -893,6 +893,7 @@ sub:
     }
     assert(ok);
   }
+  print("tests succeeded!");
 }
 
 void main() {
