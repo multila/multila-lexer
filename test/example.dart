@@ -74,6 +74,7 @@ void main() {
   var src = '''# comment
 x := 3 * (4+5);''';
   parse(src);
+  print("..ready");
 }
 
 // the output is:
